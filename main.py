@@ -17,11 +17,11 @@ handler=WebhookHandler(LINE_CHANNEL_SECRET)
 def callback():
     # get X-Line-Signature header value
     signature=request.headers["X-Line-Signature"]
-    
+
     # get request body as text
     body=request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
-    
+
     # handle webhook body
     try:
         handler.handle(body, signature)
@@ -32,9 +32,11 @@ def callback():
 # MessageEvent
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    input_text = event.message.text
+    output_text = "「" + input_text + "」ってコーヒーがあるの？"
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text='「' + event.message.text + '」っていうコーヒーがあるの？')
+        TextSendMessage(text=output_text)
     )
 
 if __name__=="__main__":
